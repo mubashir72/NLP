@@ -1,5 +1,3 @@
-# This code is built on top of the example code from Huggingface TRL Team
-# Available at https://github.com/huggingface/trl/blob/main/examples/scripts/orpo.py
 
 from dataclasses import dataclass, field
 from typing import Optional

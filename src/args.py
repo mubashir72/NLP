@@ -25,6 +25,7 @@ def default_args(parser):
     parser.add_argument("--alpha", default=1.0, type=float, help="Hyperparameter for weighting L_OR")
     parser.add_argument("--seed", default=42, type=int, help="Random seed for reproducibility.")
     parser.add_argument("--disable_prompt_loss", action='store_true')
+    parser.add_argument("--max_train_samples", default=None, type=int, help="Maximum number of training samples to use. Default: None (use all data)")
 
     # LoRA
     parser.add_argument("--enable_lora", action='store_true')

@@ -100,6 +100,12 @@ class ORPO(object):
 
         train = self.data[train_split].filter(self.filter_dataset)
         print(f"\n\n>>> {len(train)} / {len(self.data[train_split])} rows left after filtering by prompt length.")
+        
+        # Limit training samples if max_train_samples is specified
+        if self.args.max_train_samples is not None and len(train) > self.args.max_train_samples:
+            train = train.select(range(self.args.max_train_samples))
+            print(f">>> Limited to {self.args.max_train_samples} training samples")
+        
         self.train = train.map(self.preprocess_dataset, batched=True, num_proc=None, remove_columns=self.data['train'].column_names, keep_in_memory=True)                
                 
         # Set WANDB & Logging Configurations
@@ -261,6 +267,7 @@ if __name__ == '__main__':
     print(f"    - Training Epochs     : {args.num_train_epochs}")
     print(f"    - Prompt Max Length   : {args.prompt_max_length}")
     print(f"    - Response Max Length : {args.response_max_length}")
+    print(f"    - Max Train Samples   : {args.max_train_samples if args.max_train_samples else 'All'}")
 
     item = ORPO(args=args)
     item.run()
