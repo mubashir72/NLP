@@ -196,7 +196,7 @@ class ORPO(object):
             learning_rate=self.args.lr,
             num_train_epochs=self.args.num_train_epochs,  # number of training epochs
             per_device_train_batch_size=self.args.per_device_train_batch_size,  # batch size for training
-            per_device_eval_batch_size=self.args.per_device_eval_batch_size,  # batch size for evaluation
+            per_device_eval_batc"/home/mubashirmemon/Downloads/NLP LLM Alignment/NLP/main.py", line 58h_size=self.args.per_device_eval_batch_size,  # batch size for evaluation
             eval_strategy=self.args.evaluation_strategy if self.is_test else 'no',
             save_strategy=self.args.evaluation_strategy,
             optim=self.args.optim,
