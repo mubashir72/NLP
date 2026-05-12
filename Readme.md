@@ -34,6 +34,11 @@ This project implements Odds Ratio Preference Optimization (ORPO) for fine-tunin
    pip install -r pip_requirements.txt
    ```
 3. Ensure you have the necessary hardware (GPU recommended for training).
+4. **Set up Weights & Biases (W&B) for logging**:
+   - Create a W&B account at [https://wandb.ai](https://wandb.ai)
+   - Obtain your API key from your W&B account settings
+   - Authenticate by running: `wandb login` and enter your API key when prompted
+   - This is required to log training metrics and results to W&B
 
 ## Usage
 
