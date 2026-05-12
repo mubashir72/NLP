@@ -6,23 +6,25 @@ This project implements Odds Ratio Preference Optimization (ORPO) for fine-tunin
 
 - `main.py`: Main entry point for running training or evaluation.
 - `pip_requirements.txt`: Python dependencies required for the project.
-- `assets/`: Static assets, including images.
 - `checkpoints/`: Saved model checkpoints from training runs.
-  - `ultrafeedback-binarized-preferences-cleaned/`: Checkpoints for Qwen2.5-1.5B-Instruct fine-tuned with ORPO.
-- `outputs/`: Evaluation results.
-  - `alpacaeval/`: AlpacaEval results for different model variants.
-  - `mtbench/`: MTBench evaluation outputs.
-- `scripts/`: Shell scripts for running specific training configurations.
-  - `run_mistral_orpo_beta.sh`: Run Mistral ORPO with beta configuration.
-  - `run_mistral_orpo_capybara.sh`: Run Mistral ORPO with Capybara dataset.
-  - `run_orpo.sh`: General ORPO training script.
+  - `ultrafeedback-binarized-preferences-cleaned/`: Contains checkpoints for Qwen2.5-1.5B-Instruct fine-tuned with ORPO.
+    - `Qwen2.5-1.5B-Instruct-ultrafeedback-binarized-preferences-cleaned-lambda1.0-ORPO-30-5-29/`: Main model with multiple checkpoint stages (checkpoint-325, checkpoint-650, checkpoint-975, etc.).
+- `data/`: Training and evaluation datasets.
+  - `train_first_10_samples.json`: Sample training data.
+- `outputs/`: Evaluation results from trained models.
+  - `alpacaeval/`: AlpacaEval benchmark results (Mistral-ORPO variants).
+  - `mtbench/`: MTBench evaluation outputs (JSONL format).
+- `results/`: Training logs and W&B export data.
+  - `trainer_state.json`: Training state information.
+  - `wandb_export_*.csv`: Exported W&B metrics and logs.
+  - `wandb-summary.json`: Training summary.
 - `src/`: Core source code.
   - `args.py`: Argument parsing utilities.
   - `orpo_trainer.py`: Custom ORPO trainer implementation.
   - `utils.py`: Utility functions.
-  - `accelerate/`: Configuration files for distributed training (DeepSpeed and FSDP).
-- `trl/`: Test files for the ORPO trainer.
-- `wandb/`: Weights & Biases logging data from training runs.
+- `trl/`: Test and demo files for the ORPO trainer.
+  - `test_orpo_trainer_demo.py`: Demo script for testing ORPO trainer.
+- `wandb/`: Weights & Biases logging data and run artifacts.
 
 ## Installation
 
@@ -37,24 +39,30 @@ This project implements Odds Ratio Preference Optimization (ORPO) for fine-tunin
 
 ### Training
 
-Use the provided scripts to run training:
+Run the main training script with appropriate configuration:
 
-- For general ORPO training: `./scripts/run_orpo.sh`
-- For Mistral with beta config: `./scripts/run_mistral_orpo_beta.sh`
-- For Mistral with Capybara: `./scripts/run_mistral_orpo_capybara.sh`
+```bash
+python main.py     --model_name Qwen/Qwen2.5-1.5B-Instruct     --data_name argilla/ultrafeedback-binarized-preferences-cleaned     --save_dir ./qwen2.5-1.5b-llm-success     --enable_lora     --num_proc 0     --lr 5e-6     --per_device_train_batch_size 1     --gradient_accumulation_steps 8     --max_train_samples 20
+```
 
-Alternatively, run directly with Python:
-```
-python main.py --config <config_file> --model <model_name>
-```
+For custom configurations, modify `main.py` or pass command-line arguments as defined in `src/args.py`.
 
 ### Evaluation
 
-Evaluation results are stored in `outputs/`. Use the scripts or modify `main.py` to run evaluations on AlpacaEval or MTBench.
+Evaluation results are automatically saved to `outputs/` during training runs. Results include:
+- AlpacaEval benchmark outputs in JSON format
+- MTBench evaluation in JSONL format
+
+Training metrics and logs are tracked with Weights & Biases and exported to `results/`.
 
 ## Model Checkpoints
 
-Pre-trained checkpoints are available in `checkpoints/`. Load them using the model loading utilities in `src/utils.py`.
+Pre-trained checkpoints are available in `checkpoints/`:
+- **Qwen2.5-1.5B-Instruct** with ORPO fine-tuning on UltraFeedback (binarized preferences)
+- Multiple training stages: checkpoint-325, checkpoint-650, checkpoint-975, checkpoint-1300, checkpoint-1625, checkpoint-1950, checkpoint-2275, checkpoint-2600, checkpoint-2925, checkpoint-3250
+- Each checkpoint includes adapter weights (LoRA format), tokenizer configs, and chat templates
+
+Load them using the model loading utilities in `src/utils.py`.
 
 ## Dependencies
 
@@ -68,12 +76,11 @@ Pre-trained checkpoints are available in `checkpoints/`. Load them using the mod
 
 ## Results
 
-Evaluation results show performance on AlpacaEval and MTBench for different ORPO variants. Refer to `outputs/` for detailed JSON/JSONL files.
+Training and evaluation results are stored in dedicated directories:
+- **`results/`**: Contains trainer state and Weights & Biases export data (CSV, JSON formats) with metrics tracked during training
+- **`outputs/`**: Contains benchmark evaluation results for different model variants (AlpacaEval JSON and MTBench JSONL formats)
+- **`checkpoints/`**: Each checkpoint directory includes trainer state, optimizer state, and scheduler information
 
 ## Contributing
 
 Feel free to submit issues or pull requests for improvements.
-
-## License
-
-[Specify license if applicable, e.g., MIT]
